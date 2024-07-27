@@ -18,7 +18,7 @@ class _RegistrationState extends State<Registration> {
   bool _obscurePassword = true;
 
   Splittreg()  {
-    FirebaseFirestore.instance.collection("split expence").add({
+    FirebaseFirestore.instance.collection("splitexpence").add({
       "Name": name.text,
       "Password": password.text,
       "Phone": phone.text,

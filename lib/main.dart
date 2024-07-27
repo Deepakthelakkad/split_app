@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:split_app/first_page.dart';
-import 'package:split_app/second_page.dart';
 
 import 'firebase_options.dart';
 
@@ -39,7 +38,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const SecondPage(),
+      home: const FirstPage(),
     );
   }
 }

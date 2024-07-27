@@ -11,7 +11,12 @@ class SecondPage extends StatefulWidget {
 class _SecondPageState extends State<SecondPage> {
   final _formKey = GlobalKey<FormState>();
   final _amountController = TextEditingController();
-  final _personController = TextEditingController();
+  List<Map<String, dynamic>> people = [
+    {"name": "Alice", "isSelected": false},
+    {"name": "Bob", "isSelected": false},
+    {"name": "Charlie", "isSelected": false},
+    // Add more people here or fetch from the `splitexpence` collection
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +25,8 @@ class _SecondPageState extends State<SecondPage> {
         physics: NeverScrollableScrollPhysics(),
         child: Container(
           height: 1000,
-          decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/tech.jpeg")),
+          decoration: BoxDecoration(
+            image: DecorationImage(image: AssetImage("assets/tech.jpeg")),
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -61,41 +67,68 @@ class _SecondPageState extends State<SecondPage> {
                 SizedBox(height: MediaQuery.of(context).size.height * 0.08),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: TextFormField(
-                    keyboardType: TextInputType.number,
-                    controller: _personController,
-                    decoration:  InputDecoration(
-                      contentPadding: EdgeInsets.all(5),
-                      hintText: "Enter the number of Person",
-                      hintStyle: TextStyle(color: Colors.black),
-                    ),
+                  child: Column(
+                    children: people.map((person) {
+                      return CheckboxListTile(
+                        title: Text(person['name']),
+                        value: person['isSelected'],
+                        onChanged: (bool? value) {
+                          setState(() {
+                            person['isSelected'] = value!;
+                          });
+                        },
+                      );
+                    }).toList(),
                   ),
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.04),
                 InkWell(
                   onTap: () {
                     double amount = double.parse(_amountController.text);
-                    int persons = int.parse(_personController.text);
-                    double amountPerPerson = amount / persons;
+                    int selectedPersonsCount = people
+                        .where((person) => person['isSelected'] == true)
+                        .length;
 
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text('Amount Per Person'),
-                          content: Text(
-                              'Each person should pay: Rs ${amountPerPerson.toStringAsFixed(2)}'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text('OK'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
+                    if (selectedPersonsCount > 0) {
+                      double amountPerPerson = amount / selectedPersonsCount;
+
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Amount Per Person'),
+                            content: Text(
+                                'Each person should pay: Rs ${amountPerPerson.toStringAsFixed(2)}'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('OK'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    } else {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('No Person Selected'),
+                            content: Text('Please select at least one person.'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('OK'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
                   },
                   child: Container(
                     height: 60,
