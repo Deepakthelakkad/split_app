@@ -28,8 +28,8 @@ class _LoginState extends State<Login> {
     if (user.docs.isNotEmpty) {
       id = user.docs[0].id;
 
-      // SharedPreferences data = await SharedPreferences.getInstance();
-      // data.setString('id', id);
+      SharedPreferences data = await SharedPreferences.getInstance();
+      data.setString('id', id);
 
       Navigator.pushReplacement(context, MaterialPageRoute(
         builder: (context) {
@@ -50,7 +50,6 @@ class _LoginState extends State<Login> {
     return Form(
       key: formkey,
       child: Scaffold(
-        backgroundColor: Colors.blue,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
